@@ -255,24 +255,29 @@
     "value": {
      "frames": [
       {
-       "parent": "base_link",
-       "child": "lift_base_link",
+       "parent": "world",
+       "child": "base_footprint",
        "static": true
       },
       {
-       "parent": "lift_base_link",
+       "parent": "base_footprint",
+       "child": "lift_column_base_link",
+       "static": true
+      },
+      {
+       "parent": "lift_column_base_link",
        "child": "lift_carriage_link",
        "static": false
       },
       {
-       "parent": "map",
-       "child": "odom",
-       "static": false
+       "parent": "lift_carriage_link",
+       "child": "openarm_left_base_link",
+       "static": true
       },
       {
-       "parent": "odom",
-       "child": "base_link",
-       "static": false
+       "parent": "lift_carriage_link",
+       "child": "openarm_right_base_link",
+       "static": true
       }
      ]
     },
@@ -3425,5 +3430,6 @@
     -0.00416
    ]
   }
- ]
+ ],
+ "series_provenance": "synthetic joint motion for the telemetry charts (not recorded)"
 }

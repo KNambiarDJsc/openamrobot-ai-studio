@@ -105,10 +105,13 @@ def lifecycle(inactive=()):
 
 
 def tf():
-    frames = [{"parent": "base_link", "child": "lift_base_link", "static": True},
-              {"parent": "lift_base_link", "child": "lift_carriage_link", "static": False},
-              {"parent": "map", "child": "odom", "static": False},
-              {"parent": "odom", "child": "base_link", "static": False}]
+    # Link names from openamrobot_upperbody_description (combined_robot.xacro, openamrobot_upperbody.xacro):
+    # world -> base_footprint -> lift_column_base_link -(lift_joint, prismatic)-> lift_carriage_link -> arm bases.
+    frames = [{"parent": "world", "child": "base_footprint", "static": True},
+              {"parent": "base_footprint", "child": "lift_column_base_link", "static": True},
+              {"parent": "lift_column_base_link", "child": "lift_carriage_link", "static": False},
+              {"parent": "lift_carriage_link", "child": "openarm_left_base_link", "static": True},
+              {"parent": "lift_carriage_link", "child": "openarm_right_base_link", "static": True}]
     return [obs("/tf", "tf", {"frames": frames}, 0.05)]
 
 
@@ -180,6 +183,7 @@ def build(base_upper):
                         "provenance": PROVENANCE},
             "snapshot": snapshot(fid, o, ga, ge),
             "series": series() if ga else [],
+            "series_provenance": "synthetic joint motion for the telemetry charts (not recorded)",
         })
     return out
 

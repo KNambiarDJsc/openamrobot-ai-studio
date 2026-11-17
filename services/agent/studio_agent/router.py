@@ -44,6 +44,7 @@ INTENTS: list[tuple[str, re.Pattern]] = [
 ]
 
 READ_ONLY_TOOLS = ("evaluate_readiness", "recent_events")
+_WHOLE_ROBOT_RE = re.compile(r"which\s+subsystem|what\s+(?:is\s+)?block|blocking|whole\s+robot|anything\s+else", re.I)
 
 
 class Tools(Protocol):
@@ -170,10 +171,15 @@ class Copilot:
                         lambda e: f"{e.task.value}: {e.status.value} ({len(e.checks)} checks, trace {e.trace_id})")
 
         evs = [ev_for(task)]
+        # "Which subsystem is blocking it?" asks about the whole robot even when the task is narrower.
+        if task != Task.overall and _WHOLE_ROBOT_RE.search(question):
+            evs.append(ev_for(Task.overall))
         if intent == "diagnostics":
             call("recent_events", {"limit": 5}, lambda: self.tools.recent_events(5),
                  lambda rows: f"{len(rows)} recent events")
         text = render(evs[0], focus=intent if intent in ("diagnostics", "freshness") else None)
+        if len(evs) > 1:
+            text += "\n\nWhole robot:\n" + render(evs[1], limit=4)
         provider, model_text = "deterministic", None
         if self.phrase is not None:
             model_text, provider = self.phrase(question, text)

@@ -22,5 +22,6 @@
   },
   "observations": []
  },
- "series": []
+ "series": [],
+ "series_provenance": "synthetic joint motion for the telemetry charts (not recorded)"
 }

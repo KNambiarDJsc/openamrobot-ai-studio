@@ -62,6 +62,17 @@ def test_answer_cites_status_sources_times_and_trace():
     assert "Trace: diag-2026-11-17-aaaa0002.1" in a.text and "fixture 'stale_telemetry' (demo data)" in a.text
 
 
+def test_which_subsystem_adds_the_whole_robot_view():
+    t = Tools("inactive_controller")
+    a = Copilot(t).answer("Is the robot ready for a navigation task? Which subsystem is blocking it?",
+                          "diag-2026-11-17-aaaa0006")
+    assert [e.task.value for e in a.evaluations] == ["navigation", "overall"]
+    assert a.status.value == "READY"  # navigation itself is ready
+    assert "Whole robot:\nBLOCKED" in a.text and "lift_controller" in a.text
+    assert "Trace: diag-2026-11-17-aaaa0006.2" in a.text
+    assert [c.tool for c in a.tool_calls] == ["evaluate_readiness", "evaluate_readiness"]
+
+
 def test_missing_graph_answer_is_error_with_next_check():
     a = Copilot(Tools("missing_graph")).answer("Is the robot ready?", "diag-2026-11-17-aaaa0003")
     assert a.status.value == "ERROR" and "Next check:" in a.text
