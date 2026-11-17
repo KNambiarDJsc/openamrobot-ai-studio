@@ -1,0 +1,822 @@
+{
+  "$defs": {
+    "AgentAnswer": {
+      "additionalProperties": false,
+      "properties": {
+        "evaluations": {
+          "items": {
+            "$ref": "#/$defs/ReadinessEvaluation"
+          },
+          "title": "Evaluations",
+          "type": "array"
+        },
+        "intent": {
+          "title": "Intent",
+          "type": "string"
+        },
+        "model_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional LLM phrasing; the deterministic text stays authoritative",
+          "title": "Model Text"
+        },
+        "provider": {
+          "description": "deterministic | ollama | strands",
+          "title": "Provider",
+          "type": "string"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        },
+        "refused": {
+          "title": "Refused",
+          "type": "boolean"
+        },
+        "status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Readiness"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "tool_calls": {
+          "items": {
+            "$ref": "#/$defs/ToolCall"
+          },
+          "title": "Tool Calls",
+          "type": "array"
+        },
+        "trace_id": {
+          "title": "Trace Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "trace_id",
+        "question",
+        "intent",
+        "refused",
+        "text",
+        "evaluations",
+        "tool_calls",
+        "provider"
+      ],
+      "title": "AgentAnswer",
+      "type": "object"
+    },
+    "AgentQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "question": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        }
+      },
+      "required": [
+        "question"
+      ],
+      "title": "AgentQuery",
+      "type": "object"
+    },
+    "Check": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/EvidenceRecord"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "next_check": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Next human-verifiable check when the outcome is not pass",
+          "title": "Next Check"
+        },
+        "outcome": {
+          "$ref": "#/$defs/CheckOutcome"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "subsystem": {
+          "title": "Subsystem",
+          "type": "string"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "subsystem",
+        "outcome",
+        "severity",
+        "summary",
+        "evidence"
+      ],
+      "title": "Check",
+      "type": "object"
+    },
+    "CheckOutcome": {
+      "enum": [
+        "pass",
+        "fail",
+        "unknown",
+        "error"
+      ],
+      "title": "CheckOutcome",
+      "type": "string"
+    },
+    "ConnectionState": {
+      "additionalProperties": false,
+      "properties": {
+        "adapter_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Adapter Url"
+        },
+        "consecutive_failures": {
+          "default": 0,
+          "title": "Consecutive Failures",
+          "type": "integer"
+        },
+        "fixture_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fixture Id"
+        },
+        "last_error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Error"
+        },
+        "last_ok_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Ok At"
+        },
+        "mode": {
+          "$ref": "#/$defs/SourceMode"
+        },
+        "state": {
+          "enum": [
+            "connected",
+            "reconnecting",
+            "disconnected",
+            "fixture"
+          ],
+          "title": "State",
+          "type": "string"
+        }
+      },
+      "required": [
+        "mode",
+        "state"
+      ],
+      "title": "ConnectionState",
+      "type": "object"
+    },
+    "ErrorBody": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "details": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Details"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "trace_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trace Id"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "ErrorBody",
+      "type": "object"
+    },
+    "ErrorResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/ErrorBody"
+        }
+      },
+      "required": [
+        "error"
+      ],
+      "title": "ErrorResponse",
+      "type": "object"
+    },
+    "EventRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "at": {
+          "format": "date-time",
+          "title": "At",
+          "type": "string"
+        },
+        "data": {
+          "additionalProperties": true,
+          "title": "Data",
+          "type": "object"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "kind": {
+          "description": "status_change | diagnostic | connection | fixture | refusal",
+          "title": "Kind",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "subsystem": {
+          "title": "Subsystem",
+          "type": "string"
+        },
+        "trace_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trace Id"
+        }
+      },
+      "required": [
+        "at",
+        "subsystem",
+        "severity",
+        "kind",
+        "message"
+      ],
+      "title": "EventRecord",
+      "type": "object"
+    },
+    "EvidenceRecord": {
+      "additionalProperties": false,
+      "description": "RFC A.2 evidence record.",
+      "properties": {
+        "freshness": {
+          "$ref": "#/$defs/Freshness"
+        },
+        "observed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "received_at of the observation; null if the source was never seen",
+          "title": "Observed At"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "software_revision": {
+          "$ref": "#/$defs/Revisions"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "stamp": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stamp"
+        },
+        "trace_id": {
+          "title": "Trace Id",
+          "type": "string"
+        },
+        "value": {
+          "additionalProperties": true,
+          "title": "Value",
+          "type": "object"
+        }
+      },
+      "required": [
+        "source",
+        "observed_at",
+        "freshness",
+        "value",
+        "severity",
+        "software_revision",
+        "trace_id"
+      ],
+      "title": "EvidenceRecord",
+      "type": "object"
+    },
+    "Freshness": {
+      "additionalProperties": false,
+      "properties": {
+        "age_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Seconds since received_at at evaluation time; null when missing",
+          "title": "Age S"
+        },
+        "max_age_s": {
+          "title": "Max Age S",
+          "type": "number"
+        },
+        "result": {
+          "$ref": "#/$defs/FreshnessResult"
+        }
+      },
+      "required": [
+        "age_s",
+        "max_age_s",
+        "result"
+      ],
+      "title": "Freshness",
+      "type": "object"
+    },
+    "FreshnessResult": {
+      "enum": [
+        "fresh",
+        "stale",
+        "missing"
+      ],
+      "title": "FreshnessResult",
+      "type": "string"
+    },
+    "Observation": {
+      "additionalProperties": false,
+      "description": "One allowlisted fact as received from the ROS graph (or recorded in a fixture).",
+      "properties": {
+        "kind": {
+          "description": "joint_state | controllers | diagnostics | tf | navigation_status | lifecycle | graph",
+          "title": "Kind",
+          "type": "string"
+        },
+        "received_at": {
+          "description": "Wall-clock time the adapter received or queried it; freshness is judged on this",
+          "format": "date-time",
+          "title": "Received At",
+          "type": "string"
+        },
+        "source": {
+          "description": "Allowlisted topic, service or graph query, e.g. /joint_states",
+          "title": "Source",
+          "type": "string"
+        },
+        "stamp": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Header stamp of the message, in the publisher's clock (sim time in Gazebo)",
+          "title": "Stamp"
+        },
+        "value": {
+          "additionalProperties": true,
+          "description": "Typed message content, units preserved in key names",
+          "title": "Value",
+          "type": "object"
+        }
+      },
+      "required": [
+        "source",
+        "kind",
+        "received_at",
+        "value"
+      ],
+      "title": "Observation",
+      "type": "object"
+    },
+    "Readiness": {
+      "enum": [
+        "READY",
+        "BLOCKED",
+        "UNKNOWN",
+        "ERROR"
+      ],
+      "title": "Readiness",
+      "type": "string"
+    },
+    "ReadinessEvaluation": {
+      "additionalProperties": false,
+      "properties": {
+        "blocking": {
+          "description": "Ids of failed checks",
+          "items": {
+            "type": "string"
+          },
+          "title": "Blocking",
+          "type": "array"
+        },
+        "checks": {
+          "items": {
+            "$ref": "#/$defs/Check"
+          },
+          "title": "Checks",
+          "type": "array"
+        },
+        "disclaimer": {
+          "default": "Software readiness from observed ROS state. Not a safety function, not physical acceptance.",
+          "title": "Disclaimer",
+          "type": "string"
+        },
+        "evaluated_at": {
+          "format": "date-time",
+          "title": "Evaluated At",
+          "type": "string"
+        },
+        "fixture_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fixture Id"
+        },
+        "policy_version": {
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "revisions": {
+          "$ref": "#/$defs/Revisions"
+        },
+        "snapshot_id": {
+          "title": "Snapshot Id",
+          "type": "string"
+        },
+        "source_mode": {
+          "$ref": "#/$defs/SourceMode"
+        },
+        "status": {
+          "$ref": "#/$defs/Readiness"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        },
+        "task": {
+          "$ref": "#/$defs/Task"
+        },
+        "trace_id": {
+          "title": "Trace Id",
+          "type": "string"
+        },
+        "unknown": {
+          "description": "Ids of checks that could not be decided",
+          "items": {
+            "type": "string"
+          },
+          "title": "Unknown",
+          "type": "array"
+        },
+        "warnings": {
+          "description": "Ids of checks that passed with a warning",
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "trace_id",
+        "task",
+        "status",
+        "summary",
+        "evaluated_at",
+        "policy_version",
+        "source_mode",
+        "snapshot_id",
+        "revisions",
+        "blocking",
+        "unknown",
+        "checks"
+      ],
+      "title": "ReadinessEvaluation",
+      "type": "object"
+    },
+    "Revisions": {
+      "additionalProperties": false,
+      "properties": {
+        "adapter": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Revision reported by the ROS adapter",
+          "title": "Adapter"
+        },
+        "robot_stack": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Robot stack revision, if the adapter or fixture reports one",
+          "title": "Robot Stack"
+        },
+        "studio": {
+          "description": "Git revision of AI Studio",
+          "title": "Studio",
+          "type": "string"
+        }
+      },
+      "required": [
+        "studio"
+      ],
+      "title": "Revisions",
+      "type": "object"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "warning",
+        "error"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "Snapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "captured_at": {
+          "description": "Wall-clock time the snapshot was assembled",
+          "format": "date-time",
+          "title": "Captured At",
+          "type": "string"
+        },
+        "fixture_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fixture Id"
+        },
+        "graph_available": {
+          "title": "Graph Available",
+          "type": "boolean"
+        },
+        "graph_error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Graph Error"
+        },
+        "observations": {
+          "items": {
+            "$ref": "#/$defs/Observation"
+          },
+          "title": "Observations",
+          "type": "array"
+        },
+        "revisions": {
+          "$ref": "#/$defs/Revisions"
+        },
+        "snapshot_id": {
+          "title": "Snapshot Id",
+          "type": "string"
+        },
+        "source_mode": {
+          "$ref": "#/$defs/SourceMode"
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "source_mode",
+        "captured_at",
+        "graph_available",
+        "revisions",
+        "observations"
+      ],
+      "title": "Snapshot",
+      "type": "object"
+    },
+    "SourceMode": {
+      "enum": [
+        "live",
+        "fixture"
+      ],
+      "title": "SourceMode",
+      "type": "string"
+    },
+    "Task": {
+      "enum": [
+        "overall",
+        "upper_body",
+        "navigation"
+      ],
+      "title": "Task",
+      "type": "string"
+    },
+    "ToolCall": {
+      "additionalProperties": false,
+      "properties": {
+        "args": {
+          "additionalProperties": true,
+          "title": "Args",
+          "type": "object"
+        },
+        "finished_at": {
+          "format": "date-time",
+          "title": "Finished At",
+          "type": "string"
+        },
+        "outcome": {
+          "enum": [
+            "ok",
+            "refused",
+            "error"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        },
+        "result_summary": {
+          "title": "Result Summary",
+          "type": "string"
+        },
+        "seq": {
+          "title": "Seq",
+          "type": "integer"
+        },
+        "started_at": {
+          "format": "date-time",
+          "title": "Started At",
+          "type": "string"
+        },
+        "tool": {
+          "title": "Tool",
+          "type": "string"
+        },
+        "trace_id": {
+          "title": "Trace Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "trace_id",
+        "seq",
+        "tool",
+        "args",
+        "started_at",
+        "finished_at",
+        "outcome",
+        "result_summary"
+      ],
+      "title": "ToolCall",
+      "type": "object"
+    }
+  },
+  "$id": "https://github.com/openamrobot-ai-studio/contracts/1.0.0",
+  "title": "OpenAMRobot AI Studio contracts",
+  "x-contract-version": "1.0.0"
+}

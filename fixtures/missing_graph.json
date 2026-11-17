@@ -1,0 +1,27 @@
+{
+ "fixture": {
+  "id": "missing_graph",
+  "title": "Missing ROS graph",
+  "description": "The adapter answers but discovers no ROS nodes.",
+  "label": "DEMO FIXTURE",
+  "evaluate_at": "2026-11-17T20:41:12.184000Z",
+  "change_from_baseline": "no observations; graph_available false",
+  "provenance": "Synthetic example data in the shape of the real interfaces (upperbody-sw a3a93c6 controllers and joints; openamr_nav_msgs/NavigationStatus v2). Not recorded from a robot."
+ },
+ "snapshot": {
+  "snapshot_id": "fx-missing_graph",
+  "source_mode": "fixture",
+  "fixture_id": "missing_graph",
+  "captured_at": "2026-11-17T20:41:12.184000Z",
+  "graph_available": false,
+  "graph_error": "adapter running, no ROS 2 nodes discovered on ROS_DOMAIN_ID 0 within 3.0 s",
+  "revisions": {
+   "studio": "fixture",
+   "adapter": "fixture",
+   "robot_stack": "upperbody-sw a3a93c6 / platform-sw 69847ab (shape only)"
+  },
+  "observations": []
+ },
+ "series": [],
+ "series_provenance": "synthetic joint motion for the telemetry charts (not recorded)"
+}
