@@ -1,0 +1,24 @@
+[project]
+name = "studio-api"
+version = "0.1.0"
+description = "OpenAMRobot AI Studio API (FastAPI + WebSocket), read-only diagnostics"
+requires-python = ">=3.11"
+dependencies = [
+  "oar-contracts",
+  "studio-agent",
+  "fastapi>=0.115,<0.116",
+  "uvicorn[standard]>=0.32,<0.33",
+  "sqlalchemy>=2.0,<2.1",
+  "alembic>=1.14,<1.15",
+  "httpx>=0.28,<0.29",
+]
+
+[project.optional-dependencies]
+postgres = ["psycopg[binary]>=3.2"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["studio_api"]
