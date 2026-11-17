@@ -154,7 +154,7 @@ function Explorer() {
         {detail && (
           <section className="panel detail" data-testid="evaluation-detail">
             <div className="panel-head"><h2>Evaluation</h2><button className="btn-ghost" onClick={() => setDetail(null)}>Close</button></div>
-            <TraceView ev={detail.body} />
+            <TraceView ev={detail.body} compact />
             {detail.tool_calls.length > 0 && (
               <><h3>Tool calls</h3>
                 <ul className="small">{detail.tool_calls.map((c) => <li key={c.id}><span className="mono">{c.tool}</span> {c.outcome}: {c.result_summary}</li>)}</ul></>

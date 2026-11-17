@@ -40,11 +40,12 @@ export function TraceView({ ev, compact = false }: { ev: ReadinessEvaluation; co
                 <td><span className={`outcome o-${c.outcome}`}><span aria-hidden="true">{OUTCOME_ICON[c.outcome]}</span> {c.outcome}{c.severity === "warning" && c.outcome === "pass" ? " (warn)" : ""}</span></td>
                 <td>
                   <div className="mono small">{c.id}</div>
+                  {compact && e && <div className="mono small muted">{e.source}</div>}
                   {c.next_check && !compact && <div className="next-check">Next: {c.next_check}</div>}
                 </td>
                 <td>{c.summary}</td>
                 {!compact && <td className="mono small">{e?.source}</td>}
-                <td className="mono small">{fmtTime(e?.observed_at as string | null)}</td>
+                <td className="mono small nowrap">{fmtTime(e?.observed_at as string | null)}</td>
                 <td><FreshPill result={e?.freshness.result} age={e ? `${fmtAge(e.freshness.age_s)} / ${e.freshness.max_age_s}s` : undefined} /></td>
               </tr>
             );
