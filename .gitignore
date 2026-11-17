@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+data/
+node_modules/
+.next/
+apps/web/test-results/
+apps/web/playwright-report/
+apps/web/next-env.d.ts
+*.tsbuildinfo
+.env
+.env.local
+recordings/*.tmp
